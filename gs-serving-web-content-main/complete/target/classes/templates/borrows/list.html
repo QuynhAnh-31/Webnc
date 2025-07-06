@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách Phiếu mượn</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">Danh sách Phiếu mượn</h1>
+        <a href="/borrows/new" class="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block">Thêm Phiếu mượn Mới</a>
+        <table class="w-full border">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border px-4 py-2">Người dùng</th>
+                    <th class="border px-4 py-2">Sách</th>
+                    <th class="border px-4 py-2">Ngày mượn</th>
+                    <th class="border px-4 py-2">Ngày trả</th>
+                    <th class="border px-4 py-2">Trạng thái</th>
+                    <th class="border px-4 py-2">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="borrow : ${borrows}">
+                    <td class="border px-4 py-2" th:text="${borrow.user.name}"></td>
+                    <td class="border px-4 py-2" th:text="${borrow.book.title}"></td>
+                    <td class="border px-4 py-2" th:text="${borrow.borrowDate}"></td>
+                    <td class="border px-4 py-2" th:text="${borrow.returnDate} ?: 'Chưa trả'"></td>
+                    <td class="border px-4 py-2" th:text="${borrow.returned} ? 'Đã trả' : 'Chưa trả'"></td>
+                    <td class="border px-4 py-2">
+                        <a th:if="${!borrow.returned}" th:href="@{/borrows/return/{id}(id=${borrow.id})}" class="text-blue-500">Trả sách</a>
+                        <a th:href="@{/borrows/delete/{id}(id=${borrow.id})}" class="text-red-500 ml-2">Xóa</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

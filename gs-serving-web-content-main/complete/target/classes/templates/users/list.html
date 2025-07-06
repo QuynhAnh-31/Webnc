@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách Người dùng</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">Danh sách Người dùng</h1>
+        <a href="/users/new" class="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block">Thêm Người dùng Mới</a>
+        <table class="w-full border">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border px-4 py-2">Tên</th>
+                    <th class="border px-4 py-2">Email</th>
+                    <th class="border px-4 py-2">Vai trò</th>
+                    <th class="border px-4 py-2">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td class="border px-4 py-2" th:text="${user.name}"></td>
+                    <td class="border px-4 py-2" th:text="${user.email}"></td>
+                    <td class="border px-4 py-2" th:text="${user.role}"></td>
+                    <td class="border px-4 py-2">
+                        <a th:href="@{/users/edit/{id}(id=${user.id})}" class="text-blue-500">Sửa</a>
+                        <a th:href="@{/users/delete/{id}(id=${user.id})}" class="text-red-500 ml-2">Xóa</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
