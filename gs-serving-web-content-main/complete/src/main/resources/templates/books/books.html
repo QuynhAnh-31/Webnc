@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Library Management - Books</title>
+    <meta charset="UTF-8" />
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book List</h1>
+    <form th:action="@{/books}" method="get">
+        <input type="text" name="search" placeholder="Search by title" />
+        <button type="submit">Search</button>
+    </form>
+    <p><a th:href="@{/books/add}">Add New Book</a></p>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Category</th>
+            <th>Available</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.id}"></td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.category}"></td>
+            <td th:text="${book.available}"></td>
+            <td>
+                <a th:href="@{/books/edit/{id}(id=${book.id})}">Edit</a>
+                <a th:href="@{/books/delete/{id}(id=${book.id})}" onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+    </table>
+    <p><a th:href="@{/index.html}">Back to Home</a></p>
+</body>
+</html>

@@ -1,42 +1,55 @@
 package com.example.servingwebcontent.service;
 
-import com.example.servingwebcontent.exception.ResourceNotFoundException;
 import com.example.servingwebcontent.model.Book;
 import com.example.servingwebcontent.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
+
     @Autowired
     private BookRepository bookRepository;
 
+    // Thêm sách
+    public Book addBook(Book book) {
+        return bookRepository.save(book);
+    }
+
+    // Sửa sách
+    public Book updateBook(Long id, Book updatedBook) {
+        Optional<Book> existingBook = bookRepository.findById(id);
+        if (existingBook.isPresent()) {
+            Book book = existingBook.get();
+            book.setTitle(updatedBook.getTitle());
+            book.setAuthor(updatedBook.getAuthor());
+            book.setCategory(updatedBook.getCategory());
+            book.setAvailable(updatedBook.isAvailable());
+            return bookRepository.save(book);
+        }
+        return null;
+    }
+
+    // Xóa sách
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
+    }
+
+    // Lấy tất cả sách
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
-    public Book getBookById(Long id) {
-        return bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy sách với id: " + id));
+    // Tìm kiếm sách theo tên
+    public List<Book> searchBooksByTitle(String title) {
+        return bookRepository.findByTitleContainingIgnoreCase(title);
     }
 
-    public Book createBook(Book book) {
-        return bookRepository.save(book);
-    }
-
-    public Book updateBook(Long id, Book bookDetails) {
-        Book book = getBookById(id);
-        book.setTitle(bookDetails.getTitle());
-        book.setAuthor(bookDetails.getAuthor());
-        book.setCategory(bookDetails.getCategory());
-        book.setAvailable(bookDetails.isAvailable());
-        return bookRepository.save(book);
-    }
-
-    public void deleteBook(Long id) {
-        Book book = getBookById(id);
-        bookRepository.delete(book);
+    // Lấy sách theo ID
+    public Optional<Book> getBookById(Long id) {
+        return bookRepository.findById(id);
     }
 }
