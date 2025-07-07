@@ -1,34 +1,99 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Danh sách Người dùng</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Danh Sách Người Dùng</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .user-table {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .search-box {
+            max-width: 500px;
+            margin: 20px auto;
+        }
+        .action-buttons .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        .page-title {
+            color: #343a40;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .add-user-btn {
+            margin-top: 20px;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold mb-4">Danh sách Người dùng</h1>
-        <a href="/users/new" class="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block">Thêm Người dùng Mới</a>
-        <table class="w-full border">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="border px-4 py-2">Tên</th>
-                    <th class="border px-4 py-2">Email</th>
-                    <th class="border px-4 py-2">Vai trò</th>
-                    <th class="border px-4 py-2">Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="user : ${users}">
-                    <td class="border px-4 py-2" th:text="${user.name}"></td>
-                    <td class="border px-4 py-2" th:text="${user.email}"></td>
-                    <td class="border px-4 py-2" th:text="${user.role}"></td>
-                    <td class="border px-4 py-2">
-                        <a th:href="@{/users/edit/{id}(id=${user.id})}" class="text-blue-500">Sửa</a>
-                        <a th:href="@{/users/delete/{id}(id=${user.id})}" class="text-red-500 ml-2">Xóa</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+<body class="bg-light">
+    <div class="container py-4">
+        <h1 class="text-center page-title">QUẢN LÝ NGƯỜI DÙNG</h1>
+        
+        <!-- Search Form -->
+        <div class="search-box">
+            <form th:action="@{/users}" method="get" class="input-group mb-4">
+                <input type="text" name="search" class="form-control" placeholder="Tìm kiếm theo tên hoặc email..." aria-label="Search users">
+                <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-search"></i> Tìm kiếm
+                </button>
+            </form>
+        </div>
+        
+        <!-- Users Table -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered user-table">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Họ Tên</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Vai Trò</th>
+                        <th scope="col">Số ĐT</th>
+                        <th scope="col">Mã SV</th>
+                        <th scope="col">Lớp</th>
+                        <th scope="col" class="text-center">Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.name}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td>
+                            <span th:if="${user.role == 'admin'}" class="badge bg-danger">Admin</span>
+                            <span th:if="${user.role == 'student'}" class="badge bg-primary">Student</span>
+                        </td>
+                        <td th:text="${user.phone}"></td>
+                        <td th:text="${user.studentId}"></td>
+                        <td th:text="${user.className}"></td>
+                        <td class="action-buttons text-center">
+                            <a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn btn-sm btn-warning me-1">
+                                <i class="bi bi-pencil-square"></i> Sửa
+                            </a>
+                            <a th:href="@{/users/delete/{id}(id=${user.id})}" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?')" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i> Xóa
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Add User Button -->
+        <div class="text-center add-user-btn">
+            <a th:href="@{/users/add}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Thêm Người Dùng Mới
+            </a>
+        </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

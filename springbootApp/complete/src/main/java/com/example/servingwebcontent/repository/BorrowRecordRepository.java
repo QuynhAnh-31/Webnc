@@ -16,4 +16,14 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
     List<BorrowRecord> findByUserId(Integer userId);
 
     List<BorrowRecord> findByBookId(Integer bookId);
+
+    List<BorrowRecord> findByStatus(BorrowRecord.Status status);
+
+    @Query("SELECT br FROM BorrowRecord br WHERE br.extendCount >= :extendCount")
+    List<BorrowRecord> findByExtendCountGreaterThanOrEqual(Integer extendCount);
+
+    @Query("SELECT br FROM BorrowRecord br WHERE " +
+           "(LOWER(br.user.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(br.book.title) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+           "AND (:status IS NULL OR br.status = :status)")
+    List<BorrowRecord> searchByKeywordAndStatus(String keyword, BorrowRecord.Status status);
 }

@@ -3,54 +3,256 @@
 <head>
     <title>Danh Sách Phiếu Mượn</title>
     <style>
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .error { color: red; }
-        .text-green { color: green; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .error {
+            color: #e74c3c;
+            background-color: #fadbd8;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .search-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .search-form input[type="text"] {
+            flex: 1;
+            min-width: 300px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .search-form select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+        }
+        
+        .search-form button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .search-form button:hover {
+            background-color: #2980b9;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .action-buttons a {
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .add-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .add-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .back-btn {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .back-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 500;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .status-borrowed {
+            color: #f39c12;
+            font-weight: 500;
+        }
+        
+        .status-returned {
+            color: #2ecc71;
+            font-weight: 500;
+        }
+        
+        .status-overdue {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+        
+        .status-cancelled {
+            color: #95a5a6;
+            font-weight: 500;
+        }
+        
+        .action-links a {
+            margin-right: 10px;
+            padding: 5px 10px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .edit-link {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .edit-link:hover {
+            background-color: #2980b9;
+        }
+        
+        .delete-link {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .delete-link:hover {
+            background-color: #c0392b;
+        }
+        
+        .no-records {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
-    <h1>Quản Lý Phiếu Mượn</h1>
-    <form th:action="@{/borrows}" method="get">
-        <input type="text" name="search" placeholder="Tìm kiếm theo tên người dùng hoặc tiêu đề sách" />
-        <button type="submit">Tìm</button>
-    </form>
+    <h1>Danh Sách Phiếu Mượn</h1>
+    
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+    
+    <div class="search-container">
+        <form th:action="@{/borrows}" method="get" class="search-form">
+            <input type="text" name="search" th:value="${search}" placeholder="Tìm theo tên người mượn hoặc tiêu đề sách" />
+            <select name="status">
+                <option value="ALL" th:selected="${status == null or status == 'ALL'}">Tất cả trạng thái</option>
+                <option th:each="s : ${statusList}"
+                        th:value="${s}"
+                        th:text="${s == 'BORROWED' ? 'Đang mượn' : (s == 'RETURNED' ? 'Đã trả' : (s == 'OVERDUE' ? 'Quá hạn' : s))}"
+                        th:selected="${status == s}"></option>
+            </select>
+            <button type="submit">Tìm Kiếm</button>
+        </form>
+    </div>
+    
+    <div class="action-buttons">
+        <a th:href="@{/borrows/add}" class="add-btn">+ Thêm Phiếu Mượn</a>
+        <a th:href="@{/books}" class="back-btn">← Quay Lại Danh Sách Sách</a>
+    </div>
+    
     <table>
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Người Mượn</th>
-                <th>Sách</th>
+                <th>Tên Sách</th>
                 <th>Ngày Mượn</th>
-                <th>Ngày Phải Trả</th>
+                <th>Hạn Trả</th>
                 <th>Ngày Trả</th>
                 <th>Trạng Thái</th>
+                <th>Lần Gia Hạn</th>
                 <th>Hành Động</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:if="${#lists.isEmpty(borrowRecords)}">
-                <td colspan="8" style="text-align:center;">Không có phiếu mượn nào</td>
+            <tr th:each="borrowRecord : ${borrowRecords}">
+                <td th:text="${borrowRecord.user.name}"></td>
+                <td th:text="${borrowRecord.book.title}"></td>
+                <td th:text="${#temporals.format(borrowRecord.borrowDate, 'dd/MM/yyyy')}"></td>
+                <td th:text="${#temporals.format(borrowRecord.dueDate, 'dd/MM/yyyy')}"></td>
+                <td th:text="${borrowRecord.returnDate != null} ? ${#temporals.format(borrowRecord.returnDate, 'dd/MM/yyyy')} : '-'"></td>
+                <td>
+                    <span th:switch="${borrowRecord.status}" class="status">
+                        <span th:case="BORROWED" class="status-borrowed">Đang mượn</span>
+                        <span th:case="RETURNED" class="status-returned">Đã trả</span>
+                        <span th:case="OVERDUE" class="status-overdue">Quá hạn</span>
+                        <span th:case="CANCELLED" class="status-cancelled">Đã hủy</span>
+                        <span th:case="*" th:text="${borrowRecord.status}"></span>
+                    </span>
+                </td>
+                <td th:text="${borrowRecord.extendCount} + ' / ' + 2"></td>
+                <td class="action-links">
+                    <a th:href="@{/borrows/edit/{id}(id=${borrowRecord.id})}" class="edit-link">Sửa</a>
+                    <a th:href="@{/borrows/delete/{id}(id=${borrowRecord.id})}" class="delete-link" onclick="return confirm('Bạn có chắc muốn xóa phiếu mượn này?')">Xóa</a>
+                </td>
             </tr>
-            <tr th:each="record : ${borrowRecords}">
-                <td th:text="${record.id}"></td>
-                <td th:text="${record.user.name}"></td>
-                <td th:text="${record.book.title}"></td>
-                <td th:text="${#dates.format(record.borrowDate, 'dd/MM/yyyy')}"></td>
-                <td th:text="${#dates.format(record.dueDate, 'dd/MM/yyyy')}"></td>
-                <td th:text="${record.returnDate != null ? #dates.format(record.returnDate, 'dd/MM/yyyy') : 'Chưa trả'}"></td>
-                <td>
-                    <span th:text="${record.status}"
-                          th:classappend="${record.status == 'overdue'} ? 'error' : (record.status == 'returned' ? 'text-green' : '')"></span>
-                </td>
-                <td>
-                    <a th:href="@{/borrows/edit/{id}(id=${record.id})}">Sửa</a>
-                    <a th:href="@{/borrows/delete/{id}(id=${record.id})}" onclick="return confirm('Xóa phiếu mượn này?')">Xóa</a>
-                </td>
+            <tr th:if="${borrowRecords.isEmpty()}">
+                <td colspan="8" class="no-records">Không tìm thấy phiếu mượn nào</td>
             </tr>
         </tbody>
     </table>
-    <a th:href="@{/borrows/add}">Thêm Phiếu Mượn</a>
 </body>
 </html>

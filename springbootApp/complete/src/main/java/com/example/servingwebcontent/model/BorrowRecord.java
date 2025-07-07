@@ -4,13 +4,20 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "borrow_records")
+@Table(name = "borrow_records", indexes = {
+    @Index(name = "idx_user_id", columnList = "user_id"),
+    @Index(name = "idx_book_id", columnList = "book_id")
+})
 @Getter
 @Setter
+@ToString
+@EqualsAndHashCode(of = "id")
 public class BorrowRecord {
 
     @Id
@@ -40,10 +47,32 @@ public class BorrowRecord {
 
     @NotNull(message = "Trạng thái không được để trống")
     @Column(name = "status", nullable = false)
-    private String status; // "borrowed", "returned", "overdue"
+    @Enumerated(EnumType.STRING)
+   private Status status = Status.BORROWED; // Khởi tạo mặc định
+
+
+    @NotNull(message = "Số lần gia hạn không được để trống")
+    @Column(name = "extend_count", nullable = false)
+    private Integer extendCount = 0;
+
+    public enum Status {
+        BORROWED, RETURNED, OVERDUE
+    }
 
     @PrePersist
-    protected void onCreate() {
-        status = "borrowed";
+    protected void prePersist() {
+        if (status == null) {
+            status = Status.BORROWED;
+        }
+        if (extendCount == null) {
+            extendCount = 0;
+        }
+    }
+
+    @PreUpdate
+    protected void preUpdate() {
+        if (extendCount == null) {
+            extendCount = 0;
+        }
     }
 }

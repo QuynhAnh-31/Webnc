@@ -1,0 +1,5 @@
+com/example/servingwebcontent/converter/UserConverter.class
+com/example/servingwebcontent/converter/BookConverter.class
+com/example/servingwebcontent/controller/HomeController.class
+com/example/servingwebcontent/model/BorrowRecord$Status.class
+com/example/servingwebcontent/config/WebConfig.class
