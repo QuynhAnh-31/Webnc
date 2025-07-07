@@ -358,6 +358,13 @@ Sử dụng **Thymeleaf** để xây dựng giao diện HTML động.
 ## Borrow Records
 ![image](https://github.com/user-attachments/assets/5577ba51-3ef6-4ec2-b1b6-8f4cdd827085)
 
+
+## Bắt lỗi
+
+Lỗi xảy ra khi thực hiện các thao tác thêm, sửa, xóa (trong BorrowRecordController, UserController, hoặc BookController) khiến giao diện hiển thị thông báo lỗi, nhưng dữ liệu vẫn được lưu thành công vào cơ sở dữ liệu (xác nhận sau khi tải lại trang).
+![lỗi](https://github.com/user-attachments/assets/76622475-9a70-413c-96d7-af4a1880626b)
+
+
 # Hướng dẫn chạy ứng dụng Spring Boot Quản lý Sách
 
 Vào GitHub repository chứa mã nguồn dự án, nhấn nút **Code → Open with Codespaces** để tạo một môi trường làm việc trực tuyến. Sau khi Codespace khởi động, mở Terminal và thực hiện các bước sau:
