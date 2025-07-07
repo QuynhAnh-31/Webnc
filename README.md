@@ -362,6 +362,7 @@ Sử dụng **Thymeleaf** để xây dựng giao diện HTML động.
 ## Bắt lỗi
 
 Lỗi xảy ra khi thực hiện các thao tác thêm, sửa, xóa (trong BorrowRecordController, UserController, hoặc BookController) khiến giao diện hiển thị thông báo lỗi, nhưng dữ liệu vẫn được lưu thành công vào cơ sở dữ liệu (xác nhận sau khi tải lại trang).
+
 ![lỗi](https://github.com/user-attachments/assets/76622475-9a70-413c-96d7-af4a1880626b)
 
 
