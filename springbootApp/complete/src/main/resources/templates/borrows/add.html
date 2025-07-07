@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thêm Phiếu Mượn</title>
+    <style>
+        .error { color: red; }
+        .form-group { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Thêm Phiếu Mượn</h1>
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+    <form th:action="@{/borrows/add}" th:object="${borrowRecord}" method="post">
+        <div class="form-group">
+            <label>Người Mượn:</label>
+            <select th:field="*{user}">
+                <option value="" th:text="'-- Chọn người mượn --'"></option>
+                <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
+            </select>
+            <span th:errors="*{user}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label>Sách:</label>
+            <select th:field="*{book}">
+                <option value="" th:text="'-- Chọn sách --'"></option>
+                <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title} + ' (' + ${book.status} + ')'"></option>
+            </select>
+            <span th:errors="*{book}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label>Ngày Mượn:</label>
+            <input type="date" th:field="*{borrowDate}" th:value="${#temporals.format(borrowDate, 'yyyy-MM-dd')}" />
+            <span th:errors="*{borrowDate}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label>Ngày Phải Trả:</label>
+            <input type="date" th:field="*{dueDate}" th:value="${#temporals.format(dueDate, 'yyyy-MM-dd')}" />
+            <span th:errors="*{dueDate}" class="error"></span>
+        </div>
+        <button type="submit">Lưu</button>
+    </form>
+    <a th:href="@{/borrows}">Quay Lại Danh Sách Phiếu Mượn</a>
+</body>
+</html>

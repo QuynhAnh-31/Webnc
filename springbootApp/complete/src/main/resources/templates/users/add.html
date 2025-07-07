@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thêm Người Dùng Mới</title>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4e73df;
+            --secondary: #f8f9fa;
+            --dark: #5a5c69;
+            --light: #f8f9fa;
+            --success: #1cc88a;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding: 2rem;
+        }
+        
+        .card-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .card-header {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .card-body {
+            padding: 2rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border: 1px solid #d1d3e2;
+            border-radius: 0.35rem;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5bc7;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline-secondary {
+            color: var(--dark);
+            border-color: #d1d3e2;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .error {
+            color: #e74a3b;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        h2 {
+            margin-bottom: 0;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-user-plus"></i> Thêm Người Dùng Mới</h2>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/users/add}" th:object="${user}" method="post">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Họ Tên</label>
+                        <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Nhập họ tên đầy đủ">
+                        <span th:errors="*{name}" class="error"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="Nhập địa chỉ email">
+                        <span th:errors="*{email}" class="error"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="role" class="form-label">Vai Trò</label>
+                        <select id="role" th:field="*{role}" class="form-select">
+                            <option value="" disabled selected>Chọn vai trò</option>
+                            <option value="student">Sinh viên</option>
+                            <option value="admin">Quản trị viên</option>
+                        </select>
+                        <span th:errors="*{role}" class="error"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Số Điện Thoại</label>
+                        <input type="text" id="phone" th:field="*{phone}" class="form-control" placeholder="Nhập số điện thoại">
+                        <span th:errors="*{phone}" class="error"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="studentId" class="form-label">Mã Sinh Viên</label>
+                        <input type="text" id="studentId" th:field="*{studentId}" class="form-control" placeholder="Nhập mã sinh viên">
+                        <span th:errors="*{studentId}" class="error"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="className" class="form-label">Lớp</label>
+                        <input type="text" id="className" th:field="*{className}" class="form-control" placeholder="Nhập tên lớp">
+                        <span th:errors="*{className}" class="error"></span>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Lưu Thông Tin
+                        </button>
+                        <a th:href="@{/users}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Quay Lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

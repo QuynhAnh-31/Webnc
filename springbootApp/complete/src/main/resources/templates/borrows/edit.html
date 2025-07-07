@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sửa Phiếu Mượn</title>
+    <style>
+        .error { color: red; }
+        .form-group { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Sửa Phiếu Mượn</h1>
+    <form th:action="@{/borrows/edit/{id}(id=${borrowRecord.id})}" th:object="${borrowRecord}" method="post">
+        <div class="form-group">
+            <label>Người Mượn:</label>
+            <select th:field="*{user.id}">
+                <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
+            </select>
+            <span th:errors="*{user}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label>Sách:</label>
+            <select th:field="*{book.id}">
+                <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title}"></option>
+            </select>
+            <span th:errors="*{book}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label>Ngày Mượn:</label>
+            <input type="date" th:field="*{borrowDate}" />
+            <span th:errors="*{borrowDate}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label>Ngày Phải Trả:</label>
+            <input type="date" th:field="*{dueDate}" />
+            <span th:errors="*{dueDate}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label>Ngày Trả:</label>
+            <input type="date" th:field="*{returnDate}" />
+            <span th:errors="*{returnDate}" class="error"></span>
+        </div>
+        <button type="submit">Lưu</button>
+    </form>
+    <a th:href="@{/borrows}">Quay Lại Danh Sách Phiếu Mượn</a>
+</body>
+</html>
